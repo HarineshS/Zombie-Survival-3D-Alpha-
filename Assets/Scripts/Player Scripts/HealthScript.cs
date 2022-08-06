@@ -19,6 +19,8 @@ public class HealthScript : MonoBehaviour
 
     private EnemyAudio enemyAudio; 
 
+    private PlayerStats player_Stats;
+
 
     void Awake()
     {
@@ -34,6 +36,7 @@ public class HealthScript : MonoBehaviour
 
         if(is_Player)
         {
+            player_Stats= GetComponent<PlayerStats>();
 
         }
     }
@@ -58,6 +61,8 @@ public class HealthScript : MonoBehaviour
 
         if(is_Player) //show stats UI
         {
+
+            player_Stats.Display_HealthStats(health);
 
         }
 
@@ -102,6 +107,8 @@ public class HealthScript : MonoBehaviour
             
 
             //EnemyManager spawn more enemies
+            EnemyManager.Instance.EnemyDied(true);
+
 
         }
 
@@ -129,6 +136,8 @@ public class HealthScript : MonoBehaviour
             GetComponent<PlayerMovement>().enabled=false;
             GetComponent<PlayerAttack>().enabled=false;
             GetComponent<WeaponManager>().GetCurrentSelectedWeapon().gameObject.SetActive(false);
+
+            EnemyManager.Instance.StopSpawning();
             
         }
 

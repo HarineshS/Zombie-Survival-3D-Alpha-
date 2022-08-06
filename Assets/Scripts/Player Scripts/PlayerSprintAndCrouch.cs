@@ -30,6 +30,12 @@ public class PlayerSprintAndCrouch : MonoBehaviour
     private float sprint_step_distance =0.25f;
     private float crouch_step_distance =0.5f;
 
+    private PlayerStats player_Stats;
+
+    private float sprint_Value = 100f;
+
+    public float sprint_Threshold = 20f;
+
 
 
 
@@ -43,6 +49,9 @@ public class PlayerSprintAndCrouch : MonoBehaviour
 
 
         player_footsteps = GetComponentInChildren<playerfootsteps>();
+
+        player_Stats = GetComponent<PlayerStats>();
+
         
     }
 
@@ -56,6 +65,7 @@ public class PlayerSprintAndCrouch : MonoBehaviour
     {
         player_footsteps.volume_min =walkvolmin;
         player_footsteps.volume_max =walkvolmax;
+        player_footsteps.step_distance =walk_step_distance;
     }
 
     // Update is called once per frame
@@ -73,7 +83,9 @@ public class PlayerSprintAndCrouch : MonoBehaviour
 
     void Sprint()
     {
-        if(Input.GetKeyDown(KeyCode.LeftShift) && !is_crouching)
+       if(sprint_Value>0f)
+       {
+         if(Input.GetKeyDown(KeyCode.LeftShift) && !is_crouching)
         {
             playerMovement.speed=SprintSpeed;
 
@@ -81,6 +93,7 @@ public class PlayerSprintAndCrouch : MonoBehaviour
             player_footsteps.volume_min=sprintvolume;
             player_footsteps.volume_max=sprintvolume;
         }
+       }
 
         if(Input.GetKeyUp(KeyCode.LeftShift) && !is_crouching)
         {
@@ -90,6 +103,50 @@ public class PlayerSprintAndCrouch : MonoBehaviour
             player_footsteps.volume_min=walkvolmin;
             player_footsteps.volume_max=walkvolmax;
         }
+
+        if(Input.GetKey(KeyCode.LeftShift) && !is_crouching ) // ye kar raha tha
+        {
+            print("Goes Here!");
+            
+            sprint_Value-=sprint_Threshold*Time.deltaTime;
+            
+
+            if(sprint_Value <= 0f)
+            {
+                //sprint_Value-=sprint_Threshold*Time.deltaTime;
+
+
+                //print("Goes Here!");
+                playerMovement.speed=MoveSpeed;
+                player_footsteps.step_distance=walk_step_distance;
+                player_footsteps.volume_min=walkvolmin;
+                player_footsteps.volume_max=walkvolmax;
+
+
+            }
+            player_Stats.Display_StaminaStats(sprint_Value);
+        }
+        
+
+
+        else
+        {
+            if(sprint_Value !=100f)
+            {
+                sprint_Value += (sprint_Threshold/2f)*Time.deltaTime;
+
+                player_Stats.Display_StaminaStats(sprint_Value);
+
+                if(sprint_Value>100f)
+                {
+                    sprint_Value=100f;
+                }
+
+
+            }
+
+        }
+        
 
     }
 

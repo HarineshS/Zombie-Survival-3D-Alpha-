@@ -11,7 +11,7 @@ public class ArrowAndBow : MonoBehaviour
 
     public float deactivate_Timer = 3f;
 
-    public float damage = 15f;
+    public float damage = 50f;
 
     void Awake()
     {
@@ -55,6 +55,20 @@ public class ArrowAndBow : MonoBehaviour
             gameObject.SetActive(false);
         }
     }
+
+    void OnTriggerEnter(Collider target) {
+
+        // after we touch an enemy deactivate game object
+        if(target.tag == Tags.ENEMY_TAG) {
+
+            target.GetComponent<HealthScript>().ApplyDamage(damage);
+
+            gameObject.SetActive(false);
+
+        }
+
+    }
+
 
 
 
